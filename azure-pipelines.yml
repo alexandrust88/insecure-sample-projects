@@ -1,0 +1,33 @@
+pr:
+  - master
+  - release/*
+  - epic/*
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - feature/*
+      - epic/*
+      - release/*
+    exclude:
+      - test/*
+      - temp/*
+  paths:
+    exclude:
+      - docs/*
+      - README.md
+jobs:
+  - job: SastScans
+    displayName: "Run SAST scan"
+    pool:
+      vmImage: "Ubuntu 16.04"
+    steps:
+      - script: docker pull quay.io/appthreat/sast-scan
+      - script: |
+          docker run -v $(Build.SourcesDirectory)/python:/app quay.io/appthreat/sast-scan scan --src /app --type python --out_dir /app/py_reports
+        displayName: "Python scan"
+      - script: |
+          docker run -v $(Build.SourcesDirectory)/javascript:/app quay.io/appthreat/sast-scan scan --src /app --type nodejs --out_dir /app/py_reports
+        displayName: "Node.js scan"
