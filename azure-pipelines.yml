@@ -26,8 +26,16 @@ jobs:
     steps:
       - script: docker pull quay.io/appthreat/sast-scan
       - script: |
-          docker run -v $(Build.SourcesDirectory)/python:/app quay.io/appthreat/sast-scan scan --src /app --type python --out_dir /app/py_reports
+          docker run -v $(Build.SourcesDirectory)/python:/app quay.io/appthreat/sast-scan scan --src /app --type python --out_dir /app/reports
         displayName: "Python scan"
       - script: |
-          docker run -v $(Build.SourcesDirectory)/javascript:/app quay.io/appthreat/sast-scan scan --src /app --type nodejs --out_dir /app/py_reports
+          docker run -v $(Build.SourcesDirectory)/javascript:/app quay.io/appthreat/sast-scan scan --src /app --type nodejs --out_dir /app/reports
         displayName: "Node.js scan"
+      - task: CopyFiles@2
+        displayName: "Copy analysis logs"
+        inputs:
+          SourceFolder: '$(Build.SourcesDirectory)/reports'
+          Contents: '**/*.sarif'
+          TargetFolder: 'CodeAnalysisLogs'
+          flattenFolders: true
+          
