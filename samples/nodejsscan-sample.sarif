@@ -1,0 +1,202 @@
+{
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "nodejsscan",
+          "rules": [
+            {
+              "id": "",
+              "name": "Weak Hash used - MD5",
+              "helpUri": "https://stackoverflow.com/search?q=Weak Hash used - MD5"
+            }
+          ]
+        }
+      },
+      "conversion": {
+        "tool": {
+          "driver": {
+            "name": "@AppThreat/sast-scan"
+          }
+        },
+        "invocation": {
+          "arguments": [
+            "--output",
+            "/app/reports/nodejsscan-report.json",
+            "-d",
+            "/app"
+          ],
+          "executionSuccessful": true,
+          "commandLine": "--output /app/reports/nodejsscan-report.json -d /app",
+          "endTimeUtc": "2020-01-09T15:22:40Z",
+          "workingDirectory": {
+            "uri": "file:///app"
+          }
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "endTimeUtc": "2020-01-09T15:22:40Z",
+          "workingDirectory": {
+            "uri": "file:///app"
+          }
+        }
+      ],
+      "properties": {
+        "metrics": {
+          "total_count": {
+            "good": 0,
+            "mis": 8,
+            "sec": 4
+          },
+          "vuln_count": {
+            "Loading of untrusted YAML can cause Remote Code Injection": 1,
+            "Weak Hash used - MD5": 1,
+            "XSS - Reflected Cross Site Scripting": 2
+          }
+        }
+      },
+      "results": [
+        {
+          "message": {
+            "text": "MD5 is a a weak hash which is known to have collision. Use a strong hashing function."
+          },
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "region": {
+                  "snippet": {
+                    "text": "    var hasher = crypto.createHash('md5');\n"
+                  },
+                  "startLine": 3
+                },
+                "artifactLocation": {
+                  "uri": "file:///app/CWE-916/examples/InsufficientPasswordHash.js"
+                },
+                "contextRegion": {
+                  "snippet": {
+                    "text": "    var crypto = require(\"crypto\");\n    var hasher = crypto.createHash('md5');\n"
+                  },
+                  "endLine": 3,
+                  "startLine": 2
+                }
+              }
+            }
+          ],
+          "properties": {
+            "issue_confidence": "UNDEFINED",
+            "issue_severity": "LOW"
+          },
+          "ruleId": "",
+          "ruleIndex": 0
+        },
+        {
+          "message": {
+            "text": "Untrusted User Input in Response will result in Reflected Cross Site Scripting Vulnerability."
+          },
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "region": {
+                  "snippet": {
+                    "text": "    res.send(\"Unknown user: \" + escape(req.params.id));\n"
+                  },
+                  "startLine": 8
+                },
+                "artifactLocation": {
+                  "uri": "file:///app/CWE-079/examples/ReflectedXssGood.js"
+                },
+                "contextRegion": {
+                  "snippet": {
+                    "text": "    // GOOD: request parameter is sanitized before incorporating it into the response\n    res.send(\"Unknown user: \" + escape(req.params.id));\n"
+                  },
+                  "endLine": 8,
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "issue_confidence": "UNDEFINED",
+            "issue_severity": "LOW"
+          },
+          "ruleId": "",
+          "ruleIndex": 0
+        },
+        {
+          "message": {
+            "text": "Untrusted User Input in Response will result in Reflected Cross Site Scripting Vulnerability."
+          },
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "region": {
+                  "snippet": {
+                    "text": "    res.send(\"Unknown user: \" + req.params.id);\n"
+                  },
+                  "startLine": 6
+                },
+                "artifactLocation": {
+                  "uri": "file:///app/CWE-079/examples/ReflectedXss.js"
+                },
+                "contextRegion": {
+                  "snippet": {
+                    "text": "    // BAD: a request parameter is incorporated without validation into the response\n    res.send(\"Unknown user: \" + req.params.id);\n"
+                  },
+                  "endLine": 6,
+                  "startLine": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "issue_confidence": "UNDEFINED",
+            "issue_severity": "LOW"
+          },
+          "ruleId": "",
+          "ruleIndex": 0
+        },
+        {
+          "message": {
+            "text": "User controlled data in 'load()' function can result in Remote Code Injection."
+          },
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "region": {
+                  "snippet": {
+                    "text": "  let data = jsyaml.load(req.params.data);\n"
+                  },
+                  "startLine": 4
+                },
+                "artifactLocation": {
+                  "uri": "file:///app/CWE-502/examples/UnsafeDeserializationBad.js"
+                },
+                "contextRegion": {
+                  "snippet": {
+                    "text": "function requestHandler(req, res) {\n  let data = jsyaml.load(req.params.data);\n"
+                  },
+                  "endLine": 4,
+                  "startLine": 3
+                }
+              }
+            }
+          ],
+          "properties": {
+            "issue_confidence": "UNDEFINED",
+            "issue_severity": "LOW"
+          },
+          "ruleId": "",
+          "ruleIndex": 0
+        }
+      ]
+    }
+  ],
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
+}
