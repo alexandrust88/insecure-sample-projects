@@ -1,0 +1,12 @@
+steps:
+  - name: "gcr.io/$PROJECT_ID/sast-scan"
+    id: "Scan python project"
+    args: ["--src", "python", "--type", "python"]
+
+  - name: "gcr.io/$PROJECT_ID/sast-scan"
+    id: "Scan node.js project"
+    args: ["--src", "javascript", "--type", "nodejs"]
+
+  - name: "gcr.io/$PROJECT_ID/sast-scan"
+    id: "Scan java project"
+    args: ["--src", "java", "--type", "java"]
