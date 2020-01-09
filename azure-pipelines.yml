@@ -36,5 +36,11 @@ jobs:
         inputs:
           SourceFolder: '$(Build.SourcesDirectory)'
           Contents: '**/*.sarif'
-          TargetFolder: 'CodeAnalysisLogs'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/CodeAnalysisLogs'
           flattenFolders: true
+      - task: PublishPipelineArtifact@1
+        displayName: "Publish analysis logs"
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/CodeAnalysisLogs'
+          artifact: 'CodeAnalysisLogs'
+          publishLocation: 'pipeline'
