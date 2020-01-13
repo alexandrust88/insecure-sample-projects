@@ -2,6 +2,8 @@
 
 This repo contains a number of insecure sample projects for testing purposes. The source code were pulled from various other projects on GitHub and might fall under any license. Please do not use them for any commercial or production purposes.
 
+[![Build Status](https://dev.azure.com/appthreat/aio/_apis/build/status/AppThreat.insecure-sample-projects?branchName=master)](https://dev.azure.com/appthreat/aio/_build/latest?definitionId=2&branchName=master)
+
 ## Some sample use cases
 
 To test [sast-scan](https://github.com/AppThreat/sast-scan) project
