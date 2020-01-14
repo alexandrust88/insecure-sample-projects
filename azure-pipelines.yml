@@ -25,6 +25,9 @@ jobs:
       - script: docker pull quay.io/appthreat/sast-scan:feature_context
       - script: |
           docker run -e "WORKSPACE=https://github.com/AppThreat/insecure-sample-projects/blob/$(Build.SourceVersion)" \
+            -e "REPOSITORY_URL=$(Build.Repository.Uri)" \
+            -e "COMMIT_SHA=$(Build.SourceVersion)" \
+            -e "BRANCH=$(Build.SourceBranch)" \
             -v $(Build.SourcesDirectory):/app \
             -v $(Build.ArtifactStagingDirectory):/reports \
             quay.io/appthreat/sast-scan:feature_context scan --src /app \
