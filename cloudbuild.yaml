@@ -1,12 +1,15 @@
 steps:
-  - name: "gcr.io/$PROJECT_ID/sast-scan"
-    id: "Scan python project"
-    args: ["--src", "python", "--type", "python"]
+- name: "gcr.io/$PROJECT_ID/sast-scan"
+  id: "Perform sast-scan"
+  args: ["--type", "python,nodejs", "--out_dir", "reports"]
+  env:
+  - 'WORKSPACE=https://github.com/AppThreat/insecure-sample-projects/blob/$COMMIT_SHA'
+  - 'REPOSITORY_URL=https://github.com/AppThreat/insecure-sample-projects'
+  - 'COMMIT_SHA=$COMMIT_SHA'
+  - 'BRANCH=$BRANCH_NAME'
+- name: gcr.io/cloud-builders/gsutil
+  args: ['-m', 'cp', 'reports/*.json', 'gs://sast_reports/']
+- name: gcr.io/$PROJECT_ID/bq
+  args: ['load', '--ignore_unknown_values', '--source_format=NEWLINE_DELIMITED_JSON', 'sastdb.all', 'reports/all-report.json']
 
-  - name: "gcr.io/$PROJECT_ID/sast-scan"
-    id: "Scan node.js project"
-    args: ["--src", "javascript", "--type", "nodejs"]
-
-  - name: "gcr.io/$PROJECT_ID/sast-scan"
-    id: "Scan java project"
-    args: ["--src", "java", "--type", "java"]
+timeout: 1200s
