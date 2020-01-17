@@ -22,7 +22,7 @@ jobs:
     pool:
       vmImage: "Ubuntu 16.04"
     steps:
-      - script: docker pull quay.io/appthreat/sast-scan:feature_norm-results
+      - script: docker pull quay.io/appthreat/sast-scan
       - script: |
           docker run -e "WORKSPACE=https://github.com/AppThreat/insecure-sample-projects/blob/$(Build.SourceVersion)" \
             -e "REPOSITORY_URL=$(Build.Repository.Uri)" \
@@ -30,7 +30,7 @@ jobs:
             -e "BRANCH=$(Build.SourceBranch)" \
             -v $(Build.SourcesDirectory):/app \
             -v $(Build.ArtifactStagingDirectory):/reports \
-            quay.io/appthreat/sast-scan:feature_norm-results scan --src /app \
+            quay.io/appthreat/sast-scan scan --src /app \
             --type credscan,python,nodejs \
             --out_dir /reports/CodeAnalysisLogs
         displayName: "Python and Nodejs"
