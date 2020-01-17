@@ -7,9 +7,10 @@ steps:
   - 'REPOSITORY_URL=https://github.com/AppThreat/insecure-sample-projects'
   - 'COMMIT_SHA=$COMMIT_SHA'
   - 'BRANCH=$BRANCH_NAME'
+  - 'SCAN_ID=$BUILD_ID'
 - name: gcr.io/cloud-builders/gsutil
   args: ['-m', 'cp', 'reports/*.json', 'gs://sast_reports/']
 - name: gcr.io/$PROJECT_ID/bq
-  args: ['load', '--ignore_unknown_values', '--source_format=NEWLINE_DELIMITED_JSON', 'sastdb.all', 'reports/all*.json']
+  args: ['load', '--source_format=NEWLINE_DELIMITED_JSON', 'sastdb.all', 'reports/all-$BUILD_ID-report.json']
 
 timeout: 1200s
