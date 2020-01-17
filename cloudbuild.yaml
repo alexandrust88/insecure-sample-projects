@@ -10,6 +10,6 @@ steps:
 - name: gcr.io/cloud-builders/gsutil
   args: ['-m', 'cp', 'reports/*.json', 'gs://sast_reports/']
 - name: gcr.io/$PROJECT_ID/bq
-  args: ['load', '--ignore_unknown_values', '--source_format=NEWLINE_DELIMITED_JSON', 'sastdb.all', 'reports/all-report.json']
+  args: ['load', '--ignore_unknown_values', '--source_format=NEWLINE_DELIMITED_JSON', 'sastdb.all', 'reports/all*.json']
 
 timeout: 1200s
