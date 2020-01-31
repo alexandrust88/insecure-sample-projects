@@ -31,10 +31,20 @@ jobs:
             -v $(Build.SourcesDirectory):/app \
             -v $(Build.ArtifactStagingDirectory):/reports \
             quay.io/appthreat/sast-scan scan --src /app \
-            --type credscan,python,nodejs \
+            --type credscan,python,nodejs,bom \
             --out_dir /reports/CodeAnalysisLogs
         displayName: "Python and Nodejs"
-        continueOnError: "true"      
+        continueOnError: "true" 
+      - script: |
+          docker run -e "VULNDB_HOME=/db" \
+            -v $(Agent.TempDirectory):/db \
+            -v $(Build.SourcesDirectory):/app \
+            -v $(Build.ArtifactStagingDirectory):/reports \
+            quay.io/appthreat/dep-scan scan --src /app \
+            --bom /reports/CodeAnalysisLogs/bom-report.xml \
+            --report_file /reports/CodeAnalysisLogs/depscan.json
+        displayName: "Dependency scan"
+        continueOnError: "true"  
       - task: PublishBuildArtifacts@1
         displayName: "Publish analysis logs"
         inputs:
