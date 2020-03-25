@@ -27,24 +27,15 @@ jobs:
           docker run -e "WORKSPACE=https://github.com/AppThreat/insecure-sample-projects/blob/$(Build.SourceVersion)" \
             -e "REPOSITORY_URL=$(Build.Repository.Uri)" \
             -e "COMMIT_SHA=$(Build.SourceVersion)" \
+            -e "GITHUB_TOKEN=$(GITHUB_TOKEN)" \
             -e "BRANCH=$(Build.SourceBranch)" \
             -v $(Build.SourcesDirectory):/app \
             -v $(Build.ArtifactStagingDirectory):/reports \
             quay.io/appthreat/sast-scan scan --src /app \
-            --type credscan,python,nodejs,bom \
+            --type credscan,python,nodejs,depscan \
             --out_dir /reports/CodeAnalysisLogs
-        displayName: "Python and Nodejs"
-        continueOnError: "true" 
-      - script: |
-          docker run -e "VULNDB_HOME=/db" \
-            -v $(Agent.TempDirectory):/db \
-            -v $(Build.SourcesDirectory):/app \
-            -v $(Build.ArtifactStagingDirectory):/reports \
-            quay.io/appthreat/dep-scan scan --src /app \
-            --bom /reports/CodeAnalysisLogs/bom-report.xml \
-            --report_file /reports/CodeAnalysisLogs/depscan.json
-        displayName: "Dependency scan"
-        continueOnError: "true"  
+        displayName: "Perform ShiftLeft Scan"
+        continueOnError: "true"       
       - task: PublishBuildArtifacts@1
         displayName: "Publish analysis logs"
         inputs:
